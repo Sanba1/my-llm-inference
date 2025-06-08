@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "217932295085",
+    "project_id": "disturbution-neuralnetwork",
+    "storage_bucket": "disturbution-neuralnetwork.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217932295085:android:c312716e94fb1cd7080f24",
+        "android_client_info": {
+          "package_name": "com.google.mediapipe.examples.llminference"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6SCpXAoL7DjFL6ryh6VnuS3D1Y1BnYWQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
