@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import android.content.pm.ServiceInfo
 
 class QueryListenerService : Service() {
 
@@ -30,7 +31,13 @@ class QueryListenerService : Service() {
             .setOngoing(true)  // 💡 Keeps the notification persistent
             .build()
 
-        startForeground(NOTIFICATION_ID, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        } else {
+            startForeground(NOTIFICATION_ID, notification)
+        }
+
+
 
         // ✅ Tell the system: if this service gets killed, restart it with the same intent
         return START_STICKY

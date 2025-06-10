@@ -49,7 +49,7 @@ class ChatViewModel(
                 inferenceModel.generateResponseAsync(userMessage)
                 var fullResponse = ""
 
-                withTimeout(15000L) {
+                withTimeout(30000L) {
                     inferenceModel.partialResults
                         .collect { (partialResult, done) ->
                             currentMessageId?.let {
@@ -61,7 +61,9 @@ class ChatViewModel(
                                 currentMessageId = null
                                 setInputEnabled(true)
                                 onResponseDone?.invoke(fullResponse)
-                                // ✅ Mark the model as no longer busy
+
+                                InferenceModel.logMemoryUsage("After inference")
+                                //  Mark the model as no longer busy
                                 inferenceModel.clearSessionQuery()
 
                                 cancel()// safely exit collection
@@ -70,9 +72,9 @@ class ChatViewModel(
                 }
 
             } catch (e: TimeoutCancellationException) {
-                _uiState.value.addMessage("⚠️ Model timed out after 15 seconds.", MODEL_PREFIX)
+                _uiState.value.addMessage(" Model timed out after 30 seconds.", MODEL_PREFIX)
                 setInputEnabled(true)
-                onResponseDone?.invoke("⚠️ No answer — model timed out.")
+                onResponseDone?.invoke("No answer — model timed out.")
             } catch (e: Exception) {
                 _uiState.value.addMessage(e.localizedMessage ?: "Unknown error occurred", MODEL_PREFIX)
                 setInputEnabled(true)

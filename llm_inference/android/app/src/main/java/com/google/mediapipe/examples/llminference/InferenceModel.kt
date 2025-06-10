@@ -64,6 +64,9 @@ class InferenceModel private constructor(context: Context) {
     fun generateResponseAsync(prompt: String) {
         val formattedPrompt = model.uiState.formatPrompt(prompt)
         isModelBusy = true  // mark busy
+        // Log memory before inference
+        logMemoryUsage("Before inference")
+
         llmInferenceSession.addQueryChunk(formattedPrompt)
         llmInferenceSession.generateResponseAsync()
     }
@@ -147,6 +150,12 @@ class InferenceModel private constructor(context: Context) {
 
         fun modelExists(context: Context): Boolean {
             return File(modelPath(context)).exists()
+        }
+        fun logMemoryUsage(label: String) {
+            val runtime = Runtime.getRuntime()
+            val usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / 1048576L
+            val maxHeapSizeInMB = runtime.maxMemory() / 1048576L
+            Log.d("MemoryUsage", "$label → Used: ${usedMemInMB}MB / Max: ${maxHeapSizeInMB}MB")
         }
     }
 }

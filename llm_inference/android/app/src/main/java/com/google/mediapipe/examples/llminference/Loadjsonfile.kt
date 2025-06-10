@@ -11,6 +11,8 @@ import java.io.File
 import android.util.JsonReader
 import java.io.InputStreamReader
 import com.google.mediapipe.examples.llminference.TextChunk
+import com.google.mediapipe.examples.llminference.InferenceModel
+
 
 
 // Data classes to hold text and its vector
@@ -130,7 +132,7 @@ fun retrieveRelevantPassages(
     }
 
     val topChunks = scoredChunks
-        .filter { it.second > 0.4f } //  Only keep chunks highly relevant to the question
+        .filter { it.second > 0.7f } //  Only keep chunks highly relevant to the question
         .sortedByDescending { it.second }
         .take(topK)
 
@@ -179,6 +181,9 @@ suspend fun retrieveAndFormatResponseFromRoom(
 ): Pair<String, Long> {
     val startSearch = System.currentTimeMillis()
 
+    // Log memory before retrieval
+    InferenceModel.logMemoryUsage("Before retrieval")
+
     val pdfChunks = loadPdfChunksFromJson(context, jsonFolder)
 
     val formattedPrompt: String
@@ -190,6 +195,8 @@ suspend fun retrieveAndFormatResponseFromRoom(
     }
 
     val endSearch = System.currentTimeMillis()
+    // Optionally log memory after retrieval
+    InferenceModel.logMemoryUsage("After retrieval")
     val searchDuration = endSearch - startSearch
 
     return Pair(formattedPrompt, searchDuration)
